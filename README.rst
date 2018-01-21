@@ -93,8 +93,8 @@ Created by Shay Palachy (shay.palachy@gmail.com).
 .. |Build-Status| image:: https://travis-ci.org/shaypal5/skutil.svg?branch=master
   :target: https://travis-ci.org/shaypal5/skutil
 
-.. |LICENCE| image:: https://img.shields.io/pypi/l/skutil.svg
-  :target: https://pypi.python.org/pypi/skutil
+.. |LICENCE| image:: https://img.shields.io/github/license/shaypal5/skutil.svg
+  :target: https://github.com/shaypal5/skutil/blob/master/LICENSE
 
 .. |Codecov| image:: https://codecov.io/github/shaypal5/skutil/coverage.svg?branch=master
    :target: https://codecov.io/github/shaypal5/skutil?branch=master
