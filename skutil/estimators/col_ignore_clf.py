@@ -9,7 +9,7 @@ from sklearn.utils import (
 
 
 class ColumnIgnoringClassifier(BaseEstimator, ClassifierMixin):
-    """An sklearn classifier wrapper that ignores some input columns.
+    """A sklearn classifier wrapper that ignores some input columns.
 
     Parameters
     ----------
