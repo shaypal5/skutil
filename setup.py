@@ -15,7 +15,7 @@ if sys.version_info.major < 3 or sys.version_info.minor < 5:
     sys.exit(1)
 
 
-INSTALL_REQUIRES = ['numpy', 'scikit-learn']
+INSTALL_REQUIRES = ['numpy', 'scipy', 'scikit-learn']
 TEST_REQUIRES = ['pytest', 'coverage', 'pytest-cov', 'pandas']
 
 with open('README.rst') as f:
