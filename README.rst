@@ -6,8 +6,9 @@ Utilities for scikit-learn.
 
 .. code-block:: python
 
-  import skutil
-  # mystery code
+  from skutil.estimators import ColumnIgnoringClassifier
+  # use a classifier that can't handle string data as 
+  # an inner classifier in some stacked model
 
 .. contents::
 
