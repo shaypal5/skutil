@@ -8,7 +8,7 @@ Utilities for scikit-learn.
 
   from skutil.estimators import ColumnIgnoringClassifier
   # use a classifier that can't handle string data as 
-  # an inner classifier in some stacked model
+  # an inner classifier in some stacked model, for example
 
 .. contents::
 
