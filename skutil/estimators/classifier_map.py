@@ -57,6 +57,31 @@ def _sklearn():
 
 
 def classifier_cls_by_name(name):
+    """Get an sklearn classifier class by name.
+
+    Parameters
+    ----------
+    name : str
+        The name of the sklearn classifier class to get. Can also be lower-
+        cased. Also, some shorthands are supported (e.g. svm for SVC, logreg
+        and lr for LogisticRegression).
+
+    Returns
+    -------
+    object
+        The class object of the desired classifier.
+
+    Example
+    -------
+    >>> classifier_cls_by_name('LogisticRegression')
+    <class 'sklearn.linear_model.logistic.LogisticRegression'>
+    >>> classifier_cls_by_name('logisticregression')
+    <class 'sklearn.linear_model.logistic.LogisticRegression'>
+    >>> classifier_cls_by_name('logreg')
+    <class 'sklearn.linear_model.logistic.LogisticRegression'>
+    >>> classifier_cls_by_name('lr')
+    <class 'sklearn.linear_model.logistic.LogisticRegression'>
+    """
     submodule_name, cls_name = _NAME_TO_MODULE_N_CLS_MAP[name]
     submodule = getattr(_sklearn(), submodule_name)
     return getattr(submodule, cls_name)
