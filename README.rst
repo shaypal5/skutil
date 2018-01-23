@@ -28,12 +28,17 @@ Basic Use
 
 ``skutil`` is divided into several sub-modules by functionality:
 
-Estimators
+estimators
 ----------
 
 ``ColumnIgnoringClassifier`` - A sklearn classifier wrapper that ignores some input columns. 
 
 ``classifier_cls_by_name`` - Get an sklearn classifier class by name. Also supports lowercasing and some shorthands (e.g. svm for SVC, logreg and lr for LogisticRegression).
+
+model_selection
+---------------
+
+``ConstrainedParameterGrid`` - Grid of discrete-valued parameters with constraints.
 
 
 Contributing
