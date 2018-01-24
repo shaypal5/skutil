@@ -31,7 +31,9 @@ Basic Use
 estimators
 ----------
 
-``ColumnIgnoringClassifier`` - A sklearn classifier wrapper that ignores some input columns. 
+``ColumnIgnoringClassifier`` - An sklearn classifier wrapper that ignores some input columns. 
+
+``ObjColIgnoringClassifier`` - An sklearn classifier wrapper that ignores object columns in dataframes.
 
 ``classifier_cls_by_name`` - Get an sklearn classifier class by name. Also supports lowercasing and some shorthands (e.g. svm for SVC, logreg and lr for LogisticRegression).
 

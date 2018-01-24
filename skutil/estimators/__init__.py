@@ -1,5 +1,8 @@
-from .col_ignore_clf import ColumnIgnoringClassifier
 from .classifier_map import classifier_cls_by_name
+from .col_ignore_clf import (
+    ColumnIgnoringClassifier,
+    ObjColIgnoringClassifier,
+)
 
 for name in [
     'col_ignore_clf', 'classifier_map', 'name',
