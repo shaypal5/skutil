@@ -57,7 +57,7 @@ def test_obj_col_ignoring_clf():
     assert fitted_ignore_clf == ignore_clf
 
     test_data = [[1, '233', 30]]
-    test_df = pd.DataFrame(test_data)
+    test_df = pd.DataFrame(test_data, columns=['x1', 'x2', 'x3'])
     res = fitted_ignore_clf.predict(test_df)
     assert len(res) == 1
 

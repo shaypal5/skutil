@@ -9,7 +9,7 @@ from sklearn.utils import (
 
 
 class ColumnIgnoringClassifier(BaseEstimator, ClassifierMixin):
-    """A sklearn classifier wrapper that ignores some input columns.
+    """A sklearn classifier wrapper that ignores input columns by index.
 
     Parameters
     ----------
@@ -92,13 +92,15 @@ class ObjColIgnoringClassifier(BaseEstimator, ClassifierMixin):
     """
     def __init__(self, clf):
         self.clf = clf
+        self.col_to_drop = None
 
     def _transform_X(self, X):
-        col_to_drop = [
-            col_name for col_name, dtype in X.dtypes.items()
-            if dtype == object
-        ]
-        return X.drop(col_to_drop, axis=1)
+        if self.col_to_drop is None:
+            self.col_to_drop = [
+                col_name for col_name, dtype in X.dtypes.items()
+                if dtype == object
+            ]
+        return X.drop(self.col_to_drop, axis=1)
 
     def fit(self, X, y):
         """Fits the classifier

@@ -31,7 +31,7 @@ Basic Use
 estimators
 ----------
 
-``ColumnIgnoringClassifier`` - An sklearn classifier wrapper that ignores some input columns. 
+``ColumnIgnoringClassifier`` - An sklearn classifier wrapper that ignores input columns by index. 
 
 ``ObjColIgnoringClassifier`` - An sklearn classifier wrapper that ignores object columns in dataframes.
 
