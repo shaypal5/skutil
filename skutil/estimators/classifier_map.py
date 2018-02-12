@@ -41,6 +41,10 @@ _CLS_NAME_TO_PARAM_MAP = {
         'module': _NAIVE_BAYES,
         'names': ['GaussianNB', 'gaussiannb', 'gnb'],
     },
+    'MultinomialNB': {
+        'module': _NAIVE_BAYES,
+        'names': ['MultinomialNB', 'multinomialnb', 'mnb'],
+    },
 }
 
 _NAME_TO_MODULE_N_CLS_MAP = {}
