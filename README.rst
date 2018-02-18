@@ -58,12 +58,12 @@ Clone:
   git clone git@github.com:shaypal5/skutil.git
 
 
-Install in development mode:
+Install in development mode, and with test dependencies:
 
 .. code-block:: bash
 
   cd skutil
-  pip install -e .
+  pip install -e ".[test]"
 
 
 Running the tests
@@ -73,7 +73,6 @@ To run the tests use:
 
 .. code-block:: bash
 
-  pip install pytest pytest-cov coverage
   cd skutil
   pytest
 

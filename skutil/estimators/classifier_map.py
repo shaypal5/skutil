@@ -1,8 +1,7 @@
 """Name to estimator class map."""
 
+import functools
 from importlib import import_module
-
-from decore import lazy_property
 
 
 _LIN = 'linear_model'
@@ -55,9 +54,9 @@ for cls_name in _CLS_NAME_TO_PARAM_MAP:
         _NAME_TO_MODULE_N_CLS_MAP[name] = (params['module'], cls_name)
 
 
-@lazy_property
-def _sklearn():
-    return import_module('sklearn')
+@functools.lru_cache(maxsize=8)
+def _sklearn_submodule(submodule_path):
+    return import_module(submodule_path)
 
 
 def classifier_cls_by_name(name):
@@ -87,5 +86,7 @@ def classifier_cls_by_name(name):
     <class 'sklearn.linear_model.logistic.LogisticRegression'>
     """
     submodule_name, cls_name = _NAME_TO_MODULE_N_CLS_MAP[name]
-    submodule = getattr(_sklearn(), submodule_name)
+    submodule_path = 'sklearn.{}'.format(submodule_name)
+    submodule = _sklearn_submodule(submodule_path)
+    # submodule = getattr(_sklearn(), submodule_name)
     return getattr(submodule, cls_name)
