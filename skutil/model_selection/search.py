@@ -101,7 +101,8 @@ class ConstrainedParameterGrid(ParameterGrid):
             for key in grid:
                 if key in assign_grid:
                     val = assign_grid[key]
-                    if not isinstance(val, (np.ndarray, Sequence)):
+                    if not isinstance(val, (np.ndarray, Sequence)) or (
+                            isinstance(val, str)):
                         val = [val]
                     grid[key] = val
         return ConstrainedParameterGrid(
