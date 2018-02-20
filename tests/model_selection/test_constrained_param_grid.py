@@ -10,7 +10,7 @@ PARAMS1 = {
     'b': [1, 2, 3],
     'c': [5, 6],
 }
-CONSTRAINTS1 = [{'a': 8, 'b': 3}]
+CONSTRAINTS1 = [{'a': [8], 'b': [3]}]
 
 
 def test_base():
