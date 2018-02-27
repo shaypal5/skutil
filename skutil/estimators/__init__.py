@@ -1,5 +1,8 @@
-from .classifier_map import classifier_cls_by_name
-from .col_ignore_clf import (
+from .classifier_map import (  # noqa: F401
+    classifier_cls_by_name,
+    classifier_by_params,
+)
+from .col_ignore_clf import (  # noqa: F401
     ColumnIgnoringClassifier,
     ObjColIgnoringClassifier,
 )
