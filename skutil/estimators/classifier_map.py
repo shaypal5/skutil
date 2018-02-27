@@ -134,6 +134,6 @@ def classifier_by_params(name, **kwargs):
     allowed_kwargs = _constructor_kwargs_by_class(klass)
     model_kwargs = {
         key: kwargs[key] for key in kwargs
-        if key in allowed_kwargs
+        if key in allowed_kwargs and key != 'self'
     }
     return klass(**model_kwargs)
