@@ -1,15 +1,17 @@
 """Name to estimator class map."""
 
+import inspect
 import functools
 from importlib import import_module
 
 
-_LIN = 'linear_model'
-_SMV = 'svm'
-_ENSEMBLE = 'ensemble'
-_NAIVE_BAYES = 'naive_bayes'
+_LIN = 'sklearn.linear_model'
+_SMV = 'sklearn.svm'
+_ENSEMBLE = 'sklearn.ensemble'
+_NAIVE_BAYES = 'sklearn.naive_bayes'
 
 _CLS_NAME_TO_PARAM_MAP = {
+    # sklearn submodules
     'LogisticRegression': {
         'module': _LIN,
         'names': ['LogisticRegression', 'logisticregression', 'logreg', 'lr'],
@@ -44,6 +46,11 @@ _CLS_NAME_TO_PARAM_MAP = {
         'module': _NAIVE_BAYES,
         'names': ['MultinomialNB', 'multinomialnb', 'mnb'],
     },
+    # others
+    'XGBClassifier': {
+        'module': 'xgboost.sklearn',
+        'names': ['XGBClassifier', 'xgbclassifier', 'xgboost', 'xgb'],
+    },
 }
 
 _NAME_TO_MODULE_N_CLS_MAP = {}
@@ -54,8 +61,8 @@ for cls_name in _CLS_NAME_TO_PARAM_MAP:
         _NAME_TO_MODULE_N_CLS_MAP[name] = (params['module'], cls_name)
 
 
-@functools.lru_cache(maxsize=8)
-def _sklearn_submodule(submodule_path):
+@functools.lru_cache(maxsize=32)
+def _get_module(submodule_path):
     return import_module(submodule_path)
 
 
@@ -86,7 +93,47 @@ def classifier_cls_by_name(name):
     <class 'sklearn.linear_model.logistic.LogisticRegression'>
     """
     submodule_name, cls_name = _NAME_TO_MODULE_N_CLS_MAP[name]
-    submodule_path = 'sklearn.{}'.format(submodule_name)
-    submodule = _sklearn_submodule(submodule_path)
+    submodule = _get_module(submodule_name)
     # submodule = getattr(_sklearn(), submodule_name)
     return getattr(submodule, cls_name)
+
+
+@functools.lru_cache(maxsize=128)
+def _constructor_kwargs_by_class(klass):
+    return inspect.getargspec(klass).args
+
+
+# flake8: noqa: E501
+def classifier_by_params(name, **kwargs):
+    """Returns a classifier object by the given name and parameters.
+
+    Parameters
+    ----------
+    name : str
+        The name of the sklearn classifier class. Can also be lower-
+        cased. Also, some shorthands are supported (e.g. svm for SVC, logreg
+        and lr for LogisticRegression).
+    **kwargs : Extra keyword arguments
+        All keyword arguments supported by the consturctor of the class are
+        forwar
+
+    Returns
+    -------
+    object
+        The class object of the desired classifier.
+
+    Example
+    -------
+    >>> classifier_by_params('LogisticRegression', penalty='l1', ignore='a')
+    LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+              intercept_scaling=1, max_iter=100, multi_class='ovr', n_jobs=1,
+              penalty='l1', random_state=None, solver='liblinear', tol=0.0001,
+              verbose=0, warm_start=False)
+    """
+    klass = classifier_cls_by_name(name)
+    allowed_kwargs = _constructor_kwargs_by_class(klass)
+    model_kwargs = {
+        key: kwargs[key] for key in kwargs
+        if key in allowed_kwargs
+    }
+    return klass(**model_kwargs)

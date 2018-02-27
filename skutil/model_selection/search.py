@@ -75,7 +75,8 @@ class ConstrainedParameterGrid(ParameterGrid):
         Parameters
         ----------
         assign_grid : dict of string to object or sequence
-            A, possibly partial, assignment to the parameters of the grid.
+            A, possibly partial, assignment to the parameters of the grid. Keys
+            not appearing in this grid are ignored.
 
         Returns
         -------
