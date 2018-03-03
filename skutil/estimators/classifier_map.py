@@ -115,7 +115,7 @@ def classifier_by_params(name, **kwargs):
         and lr for LogisticRegression).
     **kwargs : Extra keyword arguments
         All keyword arguments supported by the consturctor of the class are
-        forwar
+        forwared to it, while the rest are discarded.
 
     Returns
     -------
