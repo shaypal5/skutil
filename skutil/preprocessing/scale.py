@@ -9,7 +9,7 @@ from decore import lazy_property
 
 @lazy_property
 def _preprocessing():
-    return import_module(submodule_path)
+    return import_module('sklearn.preprocessing')
 
 
 @functools.lru_cache(maxsize=128)
@@ -28,10 +28,10 @@ def scaler_cls_by_name(cls_name):
 
     Example
     -------
-    >>> classifier_cls_by_name('RobustScaler')
-    <class 'sklearn.preprocessing.RobustScaler'>
-    >>> classifier_cls_by_name('Normalizer')
-    <class 'sklearn.preprocessing.Normalizer'>
+    >>> scaler_cls_by_name('RobustScaler')
+    <class 'sklearn.preprocessing.data.RobustScaler'>
+    >>> scaler_cls_by_name('Normalizer')
+    <class 'sklearn.preprocessing.data.Normalizer'>
     """
     submodule = _preprocessing()
     return getattr(submodule, cls_name)
@@ -62,7 +62,9 @@ def scaler_by_params(name, **kwargs):
     Example
     -------
     >>> scaler_by_params('QuantileTransformer', n_quantiles=500)
-    QuantileTransformer()
+    QuantileTransformer(copy=True, ignore_implicit_zeros=False, n_quantiles=500,
+              output_distribution='uniform', random_state=None,
+              subsample=100000)
     """
     klass = scaler_cls_by_name(name)
     allowed_kwargs = _constructor_kwargs_by_class(klass)
