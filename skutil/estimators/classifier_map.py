@@ -5,13 +5,52 @@ import functools
 from importlib import import_module
 
 
+_ENSEMBLE = 'sklearn.ensemble'
+_GAUS = 'sklearn.gaussian_process'
 _LIN = 'sklearn.linear_model'
 _SMV = 'sklearn.svm'
-_ENSEMBLE = 'sklearn.ensemble'
 _NAIVE_BAYES = 'sklearn.naive_bayes'
 
 _CLS_NAME_TO_PARAM_MAP = {
-    # sklearn submodules
+
+    # === Sklearn Submodules ===
+    # Ensemble
+    'AdaBoostClassifier': {
+        'module': _ENSEMBLE,
+        'names': ['AdaBoostClassifier', 'adaboostclassifier', 'AdaBoost',
+                  'adaboost'],
+    },
+    'BaggingClassifier': {
+        'module': _ENSEMBLE,
+        'names': ['BaggingClassifier', 'baggingclassifier', 'Bagging',
+                  'bagging'],
+    },
+    'ExtraTreesClassifier': {
+        'module': _ENSEMBLE,
+        'names': ['ExtraTreesClassifier', 'extratreesclassifier',
+                  'ExtraTrees', 'extratrees'],
+    },
+    'GradientBoostingClassifier': {
+        'module': _ENSEMBLE,
+        'names': ['GradientBoostingClassifier', 'gradientboostingclassifier',
+                  'GradientBoosting', 'gradientboosting'],
+    },
+    'RandomForestClassifier': {
+        'module': _ENSEMBLE,
+        'names': ['RandomForestClassifier', 'randomforestclassifier',
+                  'RandomForest', 'randomforest'],
+    },
+    'VotingClassifier': {
+        'module': _ENSEMBLE,
+        'names': ['VotingClassifier', 'votingclassifier', 'Voting', 'voting'],
+    },
+    # Gaussian processes
+    'GaussianProcessClassifier': {
+        'module': _GAUS,
+        'names': ['GaussianProcessClassifier', 'GaussianProcessClassifier',
+                  'GaussianProcess', 'gaussianprocess'],
+    },
+    # Linear models
     'LogisticRegression': {
         'module': _LIN,
         'names': ['LogisticRegression', 'logisticregression', 'logreg', 'lr'],
@@ -25,15 +64,12 @@ _CLS_NAME_TO_PARAM_MAP = {
         'module': _LIN,
         'names': ['SGDClassifier', 'sgdclassifier', 'sgd'],
     },
+    # SVM
     'SVC': {
         'module': _SMV,
         'names': ['SVC', 'svc', 'SVM', 'svm'],
     },
-    'RandomForestClassifier': {
-        'module': _ENSEMBLE,
-        'names': ['RandomForestClassifier', 'randomforestclassifier',
-                  'RandomForest', 'randomforest'],
-    },
+    # Naive Bayes
     'BernoulliNB': {
         'module': _NAIVE_BAYES,
         'names': ['BernoulliNB', 'bernoullinb', 'bnb'],
@@ -46,7 +82,8 @@ _CLS_NAME_TO_PARAM_MAP = {
         'module': _NAIVE_BAYES,
         'names': ['MultinomialNB', 'multinomialnb', 'mnb'],
     },
-    # others
+
+    # === Others ===
     'XGBClassifier': {
         'module': 'xgboost.sklearn',
         'names': ['XGBClassifier', 'xgbclassifier', 'xgboost', 'xgb'],
