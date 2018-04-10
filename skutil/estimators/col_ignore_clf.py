@@ -130,6 +130,7 @@ class ObjColIgnoringClassifier(BaseEstimator, ClassifierMixin):
             inner_X, y = check_X_y(inner_X, y)
         if sparse:
             inner_X = sp.sparse.csr_matrix(inner_X.to_coo())
+            y = np.array(y)
         self.clf = self.clf.fit(inner_X, y)
         return self
 
