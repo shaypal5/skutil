@@ -1,6 +1,7 @@
 """scikit-learn classifier wrapper ignoring some input columns."""
 
 import numpy as np
+import scipy as sp
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils import (
     check_array,
@@ -28,7 +29,7 @@ class ColumnIgnoringClassifier(BaseEstimator, ClassifierMixin):
             i for i in range(X.shape[1]) if i not in self.col_ignore]
         return X[:, col_keep]
 
-    def fit(self, X, y):
+    def fit(self, X, y, validate=True):
         """Fits the classifier
 
         Parameters
@@ -37,6 +38,8 @@ class ColumnIgnoringClassifier(BaseEstimator, ClassifierMixin):
             The training input samples.
         y : array-like, shape = [n_samples]
             The target values. An array of int.
+        validate : bool, default True
+            If set, input arrays type is validated to be ndarray.
 
         Returns
         -------
@@ -44,7 +47,8 @@ class ColumnIgnoringClassifier(BaseEstimator, ClassifierMixin):
             Returns self.
         """
         inner_X = self._transform_X(X)
-        inner_X, y = check_X_y(inner_X, y)
+        if validate:
+            inner_X, y = check_X_y(inner_X, y)
         self.clf = self.clf.fit(inner_X, y)
         return self
 
@@ -102,7 +106,7 @@ class ObjColIgnoringClassifier(BaseEstimator, ClassifierMixin):
             ]
         return X.drop(self.col_to_drop, axis=1)
 
-    def fit(self, X, y):
+    def fit(self, X, y, validate=True, sparse=False):
         """Fits the classifier
 
         Parameters
@@ -111,6 +115,10 @@ class ObjColIgnoringClassifier(BaseEstimator, ClassifierMixin):
             The training input samples.
         y : array-like, shape = [n_samples]
             The target values. An array of int.
+        validate : bool, default True
+            If set, input arrays type is validated to be ndarray.
+        sparse : bool, default False
+            If set, X is assumed to be a pandas.SparseDataFrame object.
 
         Returns
         -------
@@ -118,7 +126,11 @@ class ObjColIgnoringClassifier(BaseEstimator, ClassifierMixin):
             Returns self.
         """
         inner_X = self._transform_X(X)
-        inner_X, y = check_X_y(inner_X, y)
+        if validate:
+            inner_X, y = check_X_y(inner_X, y)
+        if sparse:
+            inner_X = sp.sparse.csr_matrix(inner_X.to_coo())
+            y = np.array(y)
         self.clf = self.clf.fit(inner_X, y)
         return self
 
