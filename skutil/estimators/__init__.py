@@ -3,8 +3,9 @@ from .classifier_map import (  # noqa: F401
     classifier_by_params,
 )
 from .col_ignore_clf import (  # noqa: F401
-    ColumnIgnoringClassifier,
+    IxColIgnoringClassifier,
     ObjColIgnoringClassifier,
+    PatternColIgnoringClassifier,
 )
 
 for name in [

@@ -69,6 +69,10 @@ _CLS_NAME_TO_PARAM_MAP = {
         'module': _SMV,
         'names': ['SVC', 'svc', 'SVM', 'svm'],
     },
+    'LinearSVC': {
+        'module': _SMV,
+        'names': ['LinearSVC', 'linearsvc', 'linsvm'],
+    },
     # Naive Bayes
     'BernoulliNB': {
         'module': _NAIVE_BAYES,
@@ -87,6 +91,10 @@ _CLS_NAME_TO_PARAM_MAP = {
     'XGBClassifier': {
         'module': 'xgboost.sklearn',
         'names': ['XGBClassifier', 'xgbclassifier', 'xgboost', 'xgb'],
+    },
+    'LGBMClassifier': {
+        'module': 'lightgbm',
+        'names': ['LGBMClassifier', 'lgbmclassifier'],
     },
 }
 

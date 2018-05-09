@@ -6,7 +6,7 @@ from sklearn.svm import SVC
 from pdutil.transform import x_y_by_col_lbl
 
 from skutil.estimators import (
-    ColumnIgnoringClassifier,
+    IxColIgnoringClassifier,
     ObjColIgnoringClassifier,
 )
 
@@ -24,7 +24,7 @@ def test_col_ignoring_clf():
     with pytest.raises(ValueError):
         clf.fit(X, y)
 
-    ignore_clf = ColumnIgnoringClassifier(
+    ignore_clf = IxColIgnoringClassifier(
         clf=clf,
         col_ignore=[list(df.columns).index('x2')],
     )
@@ -44,7 +44,7 @@ def test_col_ignoring_clf():
         assert proba <= 1
         assert proba >= 0
 
-    ignore_clf = ColumnIgnoringClassifier(
+    ignore_clf = IxColIgnoringClassifier(
         clf=clf,
         col_ignore=[list(df.columns).index('x2')],
     )
@@ -86,6 +86,7 @@ def test_obj_col_ignoring_clf_w_sparse():
     df = pd.DataFrame(data=BASE_DATA, columns=['x1', 'x2', 'x3', 'y'])
     df = df.to_sparse()
     X, y = x_y_by_col_lbl(df=df, y_col_lbl='y')
+    y = y.values
 
     clf = SVC(probability=True)
     ignore_clf = ObjColIgnoringClassifier(clf=clf)
