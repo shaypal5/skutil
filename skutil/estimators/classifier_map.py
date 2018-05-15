@@ -96,6 +96,10 @@ _CLS_NAME_TO_PARAM_MAP = {
         'module': 'lightgbm',
         'names': ['LGBMClassifier', 'lgbmclassifier'],
     },
+    'CatBoostClassifier': {
+        'module': 'catboost',
+        'names': ['CatBoostClassifier', 'catboostclassifier'],
+    },
 }
 
 _NAME_TO_MODULE_N_CLS_MAP = {}
