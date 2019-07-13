@@ -9,6 +9,7 @@
 
 from __future__ import division
 import warnings
+from inspect import signature
 
 from math import log
 import numpy as np
@@ -20,13 +21,10 @@ from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin, clone
 from sklearn.preprocessing import label_binarize, LabelBinarizer
 from sklearn.utils import indexable, column_or_1d
 from sklearn.utils.validation import check_is_fitted, check_consistent_length
-from sklearn.utils.fixes import signature
+# from sklearn.utils.fixes import signature
 from sklearn.isotonic import IsotonicRegression
 from sklearn.svm import LinearSVC
 from sklearn.model_selection import check_cv
-from sklearn.metrics.classification import (
-    _check_binary_probabilistic_predictions,
-)
 
 
 class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
@@ -505,6 +503,25 @@ class _SigmoidCalibration(BaseEstimator, RegressorMixin):
         """
         T = column_or_1d(T)
         return 1. / (1. + np.exp(self.a_ * T + self.b_))
+
+
+def _check_binary_probabilistic_predictions(y_true, y_prob):
+    """Check that y_true is binary and y_prob contains valid probabilities"""
+    check_consistent_length(y_true, y_prob)
+
+    labels = np.unique(y_true)
+
+    if len(labels) > 2:
+        raise ValueError("Only binary classification is supported. "
+                         "Provided labels %s." % labels)
+
+    if y_prob.max() > 1:
+        raise ValueError("y_prob contains values greater than 1.")
+
+    if y_prob.min() < 0:
+        raise ValueError("y_prob contains values less than 0.")
+
+    return label_binarize(y_true, labels)[:, 0]
 
 
 def calibration_curve(y_true, y_prob, normalize=False, n_bins=5):

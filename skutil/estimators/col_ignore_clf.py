@@ -143,10 +143,16 @@ class ObjColIgnoringClassifier(_BaseColumnIgnoringClassifier):
 
     def _transform_X(self, X):
         if self.col_to_drop is None:
-            self.col_to_drop = [
-                col_name for col_name, dtype in X.dtypes.items()
-                if dtype == object
-            ]
+            self.col_to_drop = []
+            for colname, dtype in X.dtypes.items():
+                if dtype == object:
+                    self.col_to_drop.append(colname)
+                else:
+                    try:
+                        if dtype.kind == 'O':
+                            self.col_to_drop.append(colname)
+                    except AttributeError:
+                        pass
         return X.drop(self.col_to_drop, axis=1)
 
 

@@ -173,9 +173,9 @@ def classifier_by_params(name, **kwargs):
 
     Example
     -------
-    >>> classifier_by_params('LogisticRegression', penalty='l1', ignore='a')
+    >>> classifier_by_params('LogisticRegression', penalty='l1', ignore='a') # doctest: +SKIP
     LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
-              intercept_scaling=1, max_iter=100, multi_class='ovr', n_jobs=1,
+                       intercept_scaling=1, l1max_iter=100, multi_class='ovr', n_jobs=1,
               penalty='l1', random_state=None, solver='liblinear', tol=0.0001,
               verbose=0, warm_start=False)
     """

@@ -61,7 +61,7 @@ def scaler_by_params(name, **kwargs):
 
     Example
     -------
-    >>> scaler_by_params('QuantileTransformer', n_quantiles=500)
+    >>> scaler_by_params('QuantileTransformer', n_quantiles=500)  # doctest: +SKIP
     QuantileTransformer(copy=True, ignore_implicit_zeros=False, n_quantiles=500,
               output_distribution='uniform', random_state=None,
               subsample=100000)
