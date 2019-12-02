@@ -1,22 +1,31 @@
 language: python
+dist: xenial
 python:
-- '3.5'
-- '3.6'
+- 3.5
+- 3.6
+- 3.7
+- 3.8
+- "3.6-dev"
+- "3.7-dev"
+- "3.8-dev"
 matrix:
-  include:
-    - python: 3.7
-      dist: xenial
-      sudo: true
+  fast_finish: true
+  allow_failures:
+    - python: "3.6-dev"
+    - python: "3.7-dev"
+    - python: "3.8-dev"
 # notifications:
 #   email:
 #     on_success: change
 #     on_failure: always
 before_install:
-  - pip install --upgrade pip
-  - pip install --upgrade pytest
-  - pip install codecov
+  - pip3 install --upgrade pip
+  - pip3 install --upgrade pytest
+  - pip3 install codecov
 install:
-  - pip install ".[test]"
-script: pytest
-after_success:
+  - pip3 install ".[test]"
+script:
+  - pytest
   - codecov
+# after_success:
+#   - codecov

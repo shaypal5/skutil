@@ -18,7 +18,7 @@ BASE_DATA = [
 
 
 def test_col_ignoring_clf():
-    clf = SVC(probability=True)
+    clf = SVC(probability=True, gamma='auto')
     df = pd.DataFrame(data=BASE_DATA, columns=['x1', 'x2', 'x3', 'y'])
     X, y = x_y_by_col_lbl(df=df, y_col_lbl='y')
     with pytest.raises(ValueError):
@@ -58,7 +58,7 @@ def test_col_ignoring_clf():
 
 
 def test_obj_col_ignoring_clf():
-    clf = SVC(probability=True)
+    clf = SVC(probability=True, gamma='auto')
     df = pd.DataFrame(data=BASE_DATA, columns=['x1', 'x2', 'x3', 'y'])
     X, y = x_y_by_col_lbl(df=df, y_col_lbl='y')
     with pytest.raises(ValueError):
@@ -88,7 +88,7 @@ def test_obj_col_ignoring_clf_w_sparse():
     X, y = x_y_by_col_lbl(df=df, y_col_lbl='y')
     y = y.values
 
-    clf = SVC(probability=True)
+    clf = SVC(probability=True, gamma='auto')
     ignore_clf = ObjColIgnoringClassifier(clf=clf)
     fitted_ignore_clf = ignore_clf.fit(X, y, validate=False, sparse=True)
     assert fitted_ignore_clf == ignore_clf

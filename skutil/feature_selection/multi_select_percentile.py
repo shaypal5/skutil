@@ -3,7 +3,6 @@
 from warnings import warn
 
 import numpy as np
-from scipy import stats
 from sklearn.utils import safe_mask
 from sklearn.utils.validation import (
     check_is_fitted,
@@ -27,9 +26,10 @@ class MultiSelectPercentile(SelectPercentile):
             return np.zeros(len(self.scores_), dtype=np.bool)
 
         scores = _clean_nans(self.scores_)
-        treshold = stats.scoreatpercentile(scores, 100 - percentile)
-        mask = scores > treshold
-        ties = np.where(scores == treshold)[0]
+        threshold = np.percentile(scores, 100 - percentile)
+        # threshold = stats.scoreatpercentile(scores, 100 - percentile)
+        mask = scores > threshold
+        ties = np.where(scores == threshold)[0]
         if len(ties):
             max_feats = int(len(scores) * percentile / 100)
             kept_ties = ties[:max_feats - mask.sum()]

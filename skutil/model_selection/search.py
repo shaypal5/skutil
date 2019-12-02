@@ -1,7 +1,7 @@
 """Extends scikit-learn tools for hyper-parameter search."""
 
 import copy
-from collections import Sequence
+from collections.abc import Sequence
 
 import numpy as np
 from sklearn.model_selection import ParameterGrid
