@@ -20,7 +20,7 @@ TEST_REQUIRES = [
     'pytest', 'scikit-learn', 'coverage', 'pytest-cov', 'pandas', 'pdutil'
 ]
 
-with open('README.rst') as f:
+with open('README.rst', encoding="utf-8") as f:
     README = f.read()
 
 setuptools.setup(
