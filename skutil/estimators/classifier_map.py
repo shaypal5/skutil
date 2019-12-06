@@ -133,13 +133,13 @@ def classifier_cls_by_name(name):
     Example
     -------
     >>> classifier_cls_by_name('LogisticRegression')
-    <class 'sklearn.linear_model.logistic.LogisticRegression'>
+    <class 'sklearn.linear_model._logistic.LogisticRegression'>
     >>> classifier_cls_by_name('logisticregression')
-    <class 'sklearn.linear_model.logistic.LogisticRegression'>
+    <class 'sklearn.linear_model._logistic.LogisticRegression'>
     >>> classifier_cls_by_name('logreg')
-    <class 'sklearn.linear_model.logistic.LogisticRegression'>
+    <class 'sklearn.linear_model._logistic.LogisticRegression'>
     >>> classifier_cls_by_name('lr')
-    <class 'sklearn.linear_model.logistic.LogisticRegression'>
+    <class 'sklearn.linear_model._logistic.LogisticRegression'>
     """
     submodule_name, cls_name = _NAME_TO_MODULE_N_CLS_MAP[name]
     submodule = _get_module(submodule_name)

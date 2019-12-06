@@ -29,9 +29,9 @@ def scaler_cls_by_name(cls_name):
     Example
     -------
     >>> scaler_cls_by_name('RobustScaler')
-    <class 'sklearn.preprocessing.data.RobustScaler'>
+    <class 'sklearn.preprocessing._data.RobustScaler'>
     >>> scaler_cls_by_name('Normalizer')
-    <class 'sklearn.preprocessing.data.Normalizer'>
+    <class 'sklearn.preprocessing._data.Normalizer'>
     """
     submodule = _preprocessing()
     return getattr(submodule, cls_name)

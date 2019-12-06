@@ -42,7 +42,10 @@ class _BaseColumnIgnoringClassifier(BaseEstimator, ClassifierMixin):
         self : object
             Returns self.
         """
-        self.classes_ = unique_labels(y)
+        if sparse:
+            self.classes_ = unique_labels(y.to_dense())
+        else:
+            self.classes_ = unique_labels(y)
         # self.classes_ = np.unique(y)
         inner_X = self._transform_X(X)
         if validate:
