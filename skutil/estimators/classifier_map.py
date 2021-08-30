@@ -149,7 +149,8 @@ def classifier_cls_by_name(name):
 
 @functools.lru_cache(maxsize=128)
 def _constructor_kwargs_by_class(klass):
-    return inspect.getargspec(klass).args
+    sig = inspect.signature(klass)
+    return list(sig.parameters.keys())
 
 
 # flake8: noqa: E501

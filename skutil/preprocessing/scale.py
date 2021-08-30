@@ -39,7 +39,8 @@ def scaler_cls_by_name(cls_name):
 
 @functools.lru_cache(maxsize=128)
 def _constructor_kwargs_by_class(klass):
-    return inspect.getargspec(klass).args
+    sig = inspect.signature(klass)
+    return list(sig.parameters.keys())
 
 
 # flake8: noqa: E501

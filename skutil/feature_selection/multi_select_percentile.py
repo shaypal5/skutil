@@ -8,10 +8,10 @@ from sklearn.utils.validation import (
     check_is_fitted,
     check_array,
 )
-from sklearn.feature_selection.univariate_selection import (
-    _clean_nans,
+from sklearn.feature_selection import (
     SelectPercentile,
 )
+from sklearn.feature_selection._univariate_selection import _clean_nans
 
 
 class MultiSelectPercentile(SelectPercentile):
