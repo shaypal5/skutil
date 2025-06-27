@@ -1,9 +1,9 @@
-"""scikit-learn classifier wrapper calibrating after fit."""
+"""Scikit-learn classifier wrapper calibrating after fit."""
 
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.model_selection import train_test_split
-# from sklearn.calibration import CalibratedClassifierCV
 
+# from sklearn.calibration import CalibratedClassifierCV
 from .calib_clf_cv import UnsafeCalibratedClassifierCV
 
 
@@ -24,7 +24,9 @@ class CalibratingCvClassifier(BaseEstimator, ClassifierMixin):
         of items is randomly sampled. By default, set to 0.25.
     stratify : bool, default True
         If set to True, the validation set is sampled in a stratified way.
+
     """
+
     def __init__(self, clf, method=None, val_size=None, stratify=True):
         self.clf = clf
         self.method = method
@@ -32,7 +34,7 @@ class CalibratingCvClassifier(BaseEstimator, ClassifierMixin):
         self.stratify = stratify
 
     def fit(self, X, y):
-        """Fits the classifier
+        """Fits the classifier.
 
         Parameters
         ----------
@@ -45,15 +47,18 @@ class CalibratingCvClassifier(BaseEstimator, ClassifierMixin):
         -------
         self : object
             Returns self.
+
         """
         strat = None
         if self.stratify:
             strat = y
         X_train, X_val, y_train, y_val = train_test_split(
-            X, y, test_size=self.val_size, stratify=strat)
+            X, y, test_size=self.val_size, stratify=strat
+        )
         self.clf.fit(X_train, y_train)
         self._calib = UnsafeCalibratedClassifierCV(
-            base_estimator=self.clf, method=self.method, cv='prefit')
+            base_estimator=self.clf, method=self.method, cv="prefit"
+        )
         self._calib.fit(X_val, y_val)
         return self
 
@@ -69,6 +74,7 @@ class CalibratingCvClassifier(BaseEstimator, ClassifierMixin):
         -------
         y : array of int of shape = [n_samples]
             Predicted labels for the given inpurt samples.
+
         """
         return self._calib.predict(X)
 
@@ -85,5 +91,6 @@ class CalibratingCvClassifier(BaseEstimator, ClassifierMixin):
         p : array of shape = [n_samples, n_classes]
             The class probabilities of the input samples. The order of the
             classes corresponds to that in the attribute classes_.
+
         """
         return self._calib.predict_proba(X)

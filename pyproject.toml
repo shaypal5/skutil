@@ -9,13 +9,13 @@ name = "skutil"
 description = "Utilities for scikit-learn."
 readme = "README.rst"
 keywords = [
-    "scikit-learn",
-    "sklearn",
-    "utilities",
-    "utils",
-    "machine learning",
-    "data science",
-    "python",
+  "data science",
+  "machine learning",
+  "python",
+  "scikit-learn",
+  "sklearn",
+  "utilities",
+  "utils",
 ]
 license = { file = "LICENSE" }
 authors = [
@@ -41,8 +41,8 @@ dynamic = [
   "version",
 ]
 dependencies = [
-    'numpy',
-    'decore'
+  "decore",
+  "numpy",
 ]
 urls.Source = "https://github.com/shaypal5/skutil"
 

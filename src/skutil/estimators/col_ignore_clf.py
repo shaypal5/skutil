@@ -1,30 +1,31 @@
-"""scikit-learn classifier wrapper ignoring some input columns."""
+"""Scikit-learn classifier wrapper ignoring some input columns."""
 
 import re
 
 import numpy as np
 import scipy as sp
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.utils.multiclass import unique_labels
 from sklearn.utils import (
     check_array,
     check_X_y,
 )
+from sklearn.utils.multiclass import unique_labels
 
 
 class _BaseColumnIgnoringClassifier(BaseEstimator, ClassifierMixin):
-    """A base class for sklearn classifier wrappers that ignores input columns.
+    """A base class for sklearn classifier wrappers that ignores input
+    columns.
     """
 
     def __init__(self, clf):
         self.clf = clf
         if hasattr(self.clf, "decision_function"):
-            setattr(self, 'decision_function', self._hidden_decision_function)
+            self.decision_function = self._hidden_decision_function
         if hasattr(self.clf, "predict_proba"):
-            setattr(self, 'predict_proba', self._hidden_predict_proba)
+            self.predict_proba = self._hidden_predict_proba
 
     def fit(self, X, y, validate=True, sparse=False):
-        """Fits the classifier
+        """Fits the classifier.
 
         Parameters
         ----------
@@ -41,6 +42,7 @@ class _BaseColumnIgnoringClassifier(BaseEstimator, ClassifierMixin):
         -------
         self : object
             Returns self.
+
         """
         if sparse:
             self.classes_ = unique_labels(y.to_dense())
@@ -68,6 +70,7 @@ class _BaseColumnIgnoringClassifier(BaseEstimator, ClassifierMixin):
         -------
         y : array of int of shape = [n_samples]
             Predicted labels for the given inpurt samples.
+
         """
         inner_X = check_array(self._transform_X(X))
         return self.clf.predict(inner_X)
@@ -85,6 +88,7 @@ class _BaseColumnIgnoringClassifier(BaseEstimator, ClassifierMixin):
         p : array of shape = [n_samples, n_classes]
             The class probabilities of the input samples. The order of the
             classes corresponds to that in the attribute classes_.
+
         """
         inner_X = check_array(self._transform_X(X))
         return self.clf.predict_proba(inner_X)
@@ -106,6 +110,7 @@ class _BaseColumnIgnoringClassifier(BaseEstimator, ClassifierMixin):
             onfidence scores per (sample, class) combination. In the binary
             case, confidence score for self.classes_[1] where >0 means this
             class would be predicted.
+
         """
         inner_X = check_array(self._transform_X(X))
         return self.clf.decision_function(inner_X)
@@ -120,15 +125,16 @@ class IxColIgnoringClassifier(_BaseColumnIgnoringClassifier):
         The object to use to fit the data.
     col_ignore : list
         A list of indices of columns to ignore.
+
     """
+
     def __init__(self, clf, col_ignore):
         super(IxColIgnoringClassifier, self).__init__(clf=clf)
         self.col_ignore = col_ignore
 
     def _transform_X(self, X):
         X = np.array(X)
-        col_keep = [
-            i for i in range(X.shape[1]) if i not in self.col_ignore]
+        col_keep = [i for i in range(X.shape[1]) if i not in self.col_ignore]
         return X[:, col_keep]
 
 
@@ -139,7 +145,9 @@ class ObjColIgnoringClassifier(_BaseColumnIgnoringClassifier):
     ----------
     clf : classifier object implementing 'fit'
         The object to use to fit the data.
+
     """
+
     def __init__(self, clf):
         super(ObjColIgnoringClassifier, self).__init__(clf=clf)
         self.col_to_drop = None
@@ -152,7 +160,7 @@ class ObjColIgnoringClassifier(_BaseColumnIgnoringClassifier):
                     self.col_to_drop.append(colname)
                 else:
                     try:
-                        if dtype.kind == 'O':
+                        if dtype.kind == "O":
                             self.col_to_drop.append(colname)
                     except AttributeError:
                         pass
@@ -171,7 +179,9 @@ class PatternColIgnoringClassifier(_BaseColumnIgnoringClassifier):
     exclude : bool, default True
         If set to True (default), all columns matching the pattern are ignored.
         Otherwise, all columns NOT matching the pattern are ignored.
+
     """
+
     def __init__(self, clf, pattern, exclude=False):
         super(PatternColIgnoringClassifier, self).__init__(clf=clf)
         self.pattern = pattern
@@ -183,7 +193,8 @@ class PatternColIgnoringClassifier(_BaseColumnIgnoringClassifier):
 
     def _transform_X(self, X):
         col_to_drop = [
-            col_name for col_name in X.columns
+            col_name
+            for col_name in X.columns
             if self.decision_func_(re.match(self.pattern, col_name))
         ]
         return X.drop(col_to_drop, axis=1)

@@ -76,9 +76,9 @@ jobs:
     if: startsWith(github.event.ref, 'refs/tags') || github.event_name == 'release'
     environment: pypi_publish
 
-    permissions:           # 👈 give this job its own token scope
-      contents: read       # required by gh-action-pypi-publish
-      id-token: write      # enables OIDC
+    permissions: # 👈 give this job its own token scope
+      contents: read # required by gh-action-pypi-publish
+      id-token: write # enables OIDC
 
     steps:
       - name: Download dist artifact

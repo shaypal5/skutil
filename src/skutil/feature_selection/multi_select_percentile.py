@@ -3,21 +3,20 @@
 from warnings import warn
 
 import numpy as np
-from sklearn.utils import safe_mask
-from sklearn.utils.validation import (
-    check_is_fitted,
-    check_array,
-)
 from sklearn.feature_selection import (
     SelectPercentile,
 )
 from sklearn.feature_selection._univariate_selection import _clean_nans
+from sklearn.utils import safe_mask
+from sklearn.utils.validation import (
+    check_array,
+    check_is_fitted,
+)
 
 
 class MultiSelectPercentile(SelectPercentile):
-
     def _custom_support_mask(self, percentile):
-        check_is_fitted(self, 'scores_')
+        check_is_fitted(self, "scores_")
 
         # Cater for NaNs
         if percentile == 100:
@@ -32,7 +31,7 @@ class MultiSelectPercentile(SelectPercentile):
         ties = np.where(scores == threshold)[0]
         if len(ties):
             max_feats = int(len(scores) * percentile / 100)
-            kept_ties = ties[:max_feats - mask.sum()]
+            kept_ties = ties[: max_feats - mask.sum()]
             mask[kept_ties] = True
         return mask
 
@@ -51,13 +50,16 @@ class MultiSelectPercentile(SelectPercentile):
         -------
         X_r : array of shape [n_samples, n_selected_features]
             The input samples with only the selected features.
+
         """
-        X = check_array(X, accept_sparse='csr')
+        X = check_array(X, accept_sparse="csr")
         mask = self._custom_support_mask(percentile=percentile)
         if not mask.any():
-            warn("No features were selected: either the data is"
-                 " too noisy or the selection test too strict.",
-                 UserWarning)
+            warn(
+                "No features were selected: either the data is"
+                " too noisy or the selection test too strict.",
+                UserWarning,
+            )
             return np.empty(0).reshape((X.shape[0], 0))
         if len(mask) != X.shape[1]:
             raise ValueError("X has a different shape than during fitting.")

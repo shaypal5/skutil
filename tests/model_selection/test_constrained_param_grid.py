@@ -4,13 +4,12 @@ from sklearn.model_selection import ParameterGrid
 
 from skutil.model_selection import ConstrainedParameterGrid
 
-
 PARAMS1 = {
-    'a': [8, 9],
-    'b': [1, 2, 3],
-    'c': [5, 6],
+    "a": [8, 9],
+    "b": [1, 2, 3],
+    "c": [5, 6],
 }
-CONSTRAINTS1 = [{'a': [8], 'b': [3]}]
+CONSTRAINTS1 = [{"a": [8], "b": [3]}]
 
 
 def test_base():
@@ -24,7 +23,7 @@ def test_base():
     assert len(reg_param_sets) == 12
     assert len(const_param_sets) == 10
     for param_set in const_param_sets:
-        assert not (param_set['a'] == 8 and param_set['b'] == 3)
+        assert not (param_set["a"] == 8 and param_set["b"] == 3)
 
 
 def test_no_constraints():
@@ -39,14 +38,14 @@ def test_no_constraints():
     assert len(const_param_sets) == 12
     found_bad = False
     for param_set in const_param_sets:
-        if param_set['a'] == 8 and param_set['b'] == 3:
+        if param_set["a"] == 8 and param_set["b"] == 3:
             found_bad = True
     assert found_bad
 
 
 PARAMS2 = {
-    'a': [1, 2],
-    'b': ['Xor', 'Yank'],
+    "a": [1, 2],
+    "b": ["Xor", "Yank"],
 }
 
 
@@ -55,13 +54,13 @@ def test_partial_with_str_assignment():
         param_grid=PARAMS2,
         bad_comb=None,
     )
-    partial_grid = cgrid.partial({'a': 1})
+    partial_grid = cgrid.partial({"a": 1})
     param_sets = list(cgrid)
     partial_param_sets = list(partial_grid)
     assert len(param_sets) == 4
     assert len(partial_param_sets) == 2
     found_bad = False
     for param_set in partial_param_sets:
-        if param_set['a'] == 2:
+        if param_set["a"] == 2:
             found_bad = True
     assert not found_bad

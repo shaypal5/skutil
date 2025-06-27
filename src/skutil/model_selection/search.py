@@ -36,6 +36,7 @@ class ConstrainedParameterGrid(ParameterGrid):
     [('a', 2), ('b', 3)]
     [('a', 2), ('b', 4)]
     [('a', 2), ('b', 5)]
+
     """
 
     def __init__(self, param_grid, bad_comb=None):
@@ -46,11 +47,13 @@ class ConstrainedParameterGrid(ParameterGrid):
 
     def __iter__(self):
         """Iterate over the points in the grid.
+
         Returns
         -------
         params : iterator over dict of string to any
             Yields dictionaries mapping each estimator parameter to one of its
             allowed values.
+
         """
         if self.bad_comb is None:
             for params in super().__iter__():
@@ -96,6 +99,7 @@ class ConstrainedParameterGrid(ParameterGrid):
         [('a', 1), ('b', 3)]
         [('a', 2), ('b', 3)]
         [('a', 2), ('b', 4)]
+
         """
         new_params = [copy.deepcopy(grid) for grid in self.param_grid]
         for grid in new_params:
@@ -103,7 +107,8 @@ class ConstrainedParameterGrid(ParameterGrid):
                 if key in assign_grid:
                     val = assign_grid[key]
                     if not isinstance(val, (np.ndarray, Sequence)) or (
-                            isinstance(val, str)):
+                        isinstance(val, str)
+                    ):
                         val = [val]
                     grid[key] = val
         return ConstrainedParameterGrid(
