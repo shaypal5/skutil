@@ -1,3 +1,5 @@
+import contextlib
+
 from .classifier_map import (  # noqa: F401
     classifier_by_params,
     classifier_cls_by_name,
@@ -11,7 +13,6 @@ from .regressor_map import (  # noqa: F401
     regressor_cls_by_name,
 )
 
-import contextlib
 for name in [
     "col_ignore_clf",
     "classifier_map",

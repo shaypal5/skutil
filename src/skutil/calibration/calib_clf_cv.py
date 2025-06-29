@@ -237,7 +237,6 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
 
         return mean_proba
 
-
     def predict(self, X):
         """Predict the target of new samples. Can be different from the
         prediction of the uncalibrated classifier.
