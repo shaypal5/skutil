@@ -16,8 +16,8 @@ BASE_DATA = [
 ]
 
 
-EXPCTD_ERR_MSG_REGEX = (
-    r"^could not convert string to float: 'asd'")
+EXPCTD_ERR_MSG_REGEX = r"^could not convert string to float: 'asd'"
+
 
 def test_col_ignoring_clf():
     clf = SVC(probability=True, gamma="auto")
