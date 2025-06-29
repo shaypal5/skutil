@@ -1,4 +1,4 @@
-"""Test the ConstainedParameterGrid class."""
+"""Test the ConstrainedParameterGrid class."""
 
 from sklearn.model_selection import ParameterGrid
 

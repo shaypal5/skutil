@@ -11,16 +11,16 @@ from .regressor_map import (  # noqa: F401
     regressor_cls_by_name,
 )
 
+import contextlib
 for name in [
     "col_ignore_clf",
     "classifier_map",
     "name",
 ]:
-    try:
+    # use `contextlib.suppress(KeyError)` instead of `try`-`except`-`pass
+    with contextlib.suppress(KeyError):
         globals().pop(name)
-    except KeyError:
-        pass
-try:
-    del name  # pylint: disable=W0631
-except NameError:
-    pass
+
+with contextlib.suppress(NameError):
+    del name
+del contextlib

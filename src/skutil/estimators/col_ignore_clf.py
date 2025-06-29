@@ -69,7 +69,7 @@ class _BaseColumnIgnoringClassifier(BaseEstimator, ClassifierMixin):
         Returns
         -------
         y : array of int of shape = [n_samples]
-            Predicted labels for the given inpurt samples.
+            Predicted labels for the given input samples.
 
         """
         inner_X = check_array(self._transform_X(X))

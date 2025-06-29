@@ -1,4 +1,4 @@
-"""Test colunm-ignoring classifier wrapper."""
+"""Test column-ignoring classifier wrapper."""
 
 import pandas as pd
 import pytest

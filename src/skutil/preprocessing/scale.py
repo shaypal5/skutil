@@ -53,8 +53,8 @@ def scaler_by_params(name, **kwargs):
     name : str
         The name of the sklearn scaler class.
     **kwargs : Extra keyword arguments
-        All keyword arguments supported by the consturctor of the class are
-        forwared to it, while the rest are discarded.
+        All keyword arguments supported by the constructor of the class are
+        forward to it, while the rest are discarded.
 
     Returns
     -------

@@ -5,7 +5,7 @@ import inspect
 from importlib import import_module
 
 _ENSEMBLE = "sklearn.ensemble"
-_GAUS = "sklearn.gaussian_process"
+_GAUSS = "sklearn.gaussian_process"
 _LIN = "sklearn.linear_model"
 _SMV = "sklearn.svm"
 _NAIVE_BAYES = "sklearn.naive_bayes"
@@ -64,7 +64,7 @@ _CLS_NAME_TO_PARAM_MAP = {
     },
     # Gaussian processes
     "GaussianProcessClassifier": {
-        "module": _GAUS,
+        "module": _GAUSS,
         "names": [
             "GaussianProcessClassifier",
             "GaussianProcessClassifier",
@@ -131,8 +131,8 @@ _NAME_TO_MODULE_N_CLS_MAP = {}
 
 for cls_name in _CLS_NAME_TO_PARAM_MAP:
     params = _CLS_NAME_TO_PARAM_MAP[cls_name]
-    for name in params["names"]:
-        _NAME_TO_MODULE_N_CLS_MAP[name] = (params["module"], cls_name)
+    for _name in params["names"]:
+        _NAME_TO_MODULE_N_CLS_MAP[_name] = (params["module"], cls_name)
 
 
 @functools.lru_cache(maxsize=32)
@@ -190,8 +190,8 @@ def classifier_by_params(name, **kwargs):
         cased. Also, some shorthands are supported (e.g. svm for SVC, logreg
         and lr for LogisticRegression).
     **kwargs : Extra keyword arguments
-        All keyword arguments supported by the consturctor of the class are
-        forwared to it, while the rest are discarded.
+        All keyword arguments supported by the constructor of the class are
+        forward to it, while the rest are discarded.
 
     Returns
     -------

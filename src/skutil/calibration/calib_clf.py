@@ -28,6 +28,7 @@ class CalibratingCvClassifier(BaseEstimator, ClassifierMixin):
     """
 
     def __init__(self, clf, method=None, val_size=None, stratify=True):
+        """Initialize the calibrating classifier."""
         self.clf = clf
         self.method = method
         self.val_size = val_size
@@ -49,11 +50,11 @@ class CalibratingCvClassifier(BaseEstimator, ClassifierMixin):
             Returns self.
 
         """
-        strat = None
+        stratify = None
         if self.stratify:
-            strat = y
+            stratify = y
         X_train, X_val, y_train, y_val = train_test_split(
-            X, y, test_size=self.val_size, stratify=strat
+            X, y, test_size=self.val_size, stratify=stratify
         )
         self.clf.fit(X_train, y_train)
         self._calib = UnsafeCalibratedClassifierCV(
@@ -73,7 +74,7 @@ class CalibratingCvClassifier(BaseEstimator, ClassifierMixin):
         Returns
         -------
         y : array of int of shape = [n_samples]
-            Predicted labels for the given inpurt samples.
+            Predicted labels for the given input samples.
 
         """
         return self._calib.predict(X)

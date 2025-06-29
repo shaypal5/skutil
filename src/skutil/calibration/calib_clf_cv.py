@@ -101,6 +101,7 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
     """
 
     def __init__(self, base_estimator=None, method="sigmoid", cv=3):
+        """Initialize the calibrating classifier."""
         self.base_estimator = base_estimator
         self.method = method
         self.cv = cv
@@ -175,7 +176,8 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
                 warnings.warn(
                     "%s does not support sample_weight. Samples"
                     " weights are only used for the calibration"
-                    " itself." % estimator_name
+                    " itself." % estimator_name,
+                    stacklevel=2,
                 )
                 base_estimator_sample_weight = None
             else:
@@ -234,6 +236,7 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
         mean_proba /= len(self.calibrated_classifiers_)
 
         return mean_proba
+
 
     def predict(self, X):
         """Predict the target of new samples. Can be different from the
@@ -413,7 +416,7 @@ class _CalibratedClassifier(object):
 
 
 def _sigmoid_calibration(df, y, sample_weight=None):
-    """Probability Calibration with sigmoid method (Platt 2000)
+    """Probability Calibration with sigmoid method (Platt 2000).
 
     Parameters
     ----------
