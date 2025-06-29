@@ -1,4 +1,4 @@
 """Utilities for scikit-learn."""
 
-from . import estimators as estimators
-from ._version import *  # noqa: F403
+from . import estimators as estimators  # noqa: F401, F403
+from ._version import *  # noqa: F403, F401
