@@ -40,6 +40,7 @@ class ConstrainedParameterGrid(ParameterGrid):
     """
 
     def __init__(self, param_grid, bad_comb=None):
+        """Initialize the constrained parameter grid."""
         super().__init__(param_grid)
         self.bad_comb = bad_comb
         if bad_comb is not None:
@@ -73,7 +74,7 @@ class ConstrainedParameterGrid(ParameterGrid):
                     yield params
 
     def partial(self, assign_grid):
-        """Returns a new parameter grid by the given partial assignment.
+        """Return a new parameter grid by the given partial assignment.
 
         Parameters
         ----------

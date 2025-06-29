@@ -16,11 +16,14 @@ BASE_DATA = [
 ]
 
 
+EXPCTD_ERR_MSG_REGEX = (
+    r"^could not convert string to float: 'asd'")
+
 def test_col_ignoring_clf():
     clf = SVC(probability=True, gamma="auto")
     df = pd.DataFrame(data=BASE_DATA, columns=["x1", "x2", "x3", "y"])
     X, y = x_y_by_col_lbl(df=df, y_col_lbl="y")
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=EXPCTD_ERR_MSG_REGEX):
         clf.fit(X, y)
 
     ignore_clf = IxColIgnoringClassifier(
@@ -60,7 +63,7 @@ def test_obj_col_ignoring_clf():
     clf = SVC(probability=True, gamma="auto")
     df = pd.DataFrame(data=BASE_DATA, columns=["x1", "x2", "x3", "y"])
     X, y = x_y_by_col_lbl(df=df, y_col_lbl="y")
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=EXPCTD_ERR_MSG_REGEX):
         clf.fit(X, y)
 
     ignore_clf = ObjColIgnoringClassifier(clf=clf)

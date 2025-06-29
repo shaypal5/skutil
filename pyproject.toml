@@ -134,7 +134,7 @@ blank = true
 
 [tool.pytest.ini_options]
 testpaths = [
-  "skutil",
+  "src/skutil",
   "tests",
 ]
 norecursedirs = [
