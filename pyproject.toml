@@ -164,3 +164,6 @@ exclude_lines = [
   "raise NotImplementedError", # Don't complain if tests don't hit defensive assertion code:
   "if TYPE_CHECKING:",         # Is only true when running mypy, not tests
 ]
+
+[tool.black]
+line-length = 79
