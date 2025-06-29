@@ -4,3 +4,8 @@ from .calib_clf import (  # noqa: F401
 from .calib_clf_cv import (  # noqa: F401
     UnsafeCalibratedClassifierCV,
 )
+
+__all__ = [
+    "CalibratingCvClassifier",
+    "UnsafeCalibratedClassifierCV",
+]

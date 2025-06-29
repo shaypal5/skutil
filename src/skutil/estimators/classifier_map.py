@@ -181,7 +181,7 @@ def _constructor_kwargs_by_class(klass):
 
 # flake8: noqa: E501
 def classifier_by_params(name, **kwargs):
-    """Returns a classifier object by the given name and parameters.
+    """Return a classifier object by the given name and parameters.
 
     Parameters
     ----------

@@ -15,6 +15,36 @@ from sklearn.utils.validation import (
 
 
 class MultiSelectPercentile(SelectPercentile):
+    """A feature selector that can be used to select multiple percentiles.
+
+    This is a wrapper around sklearn's SelectPercentile that allows you to
+    fit the selector once and then use it to transform data for multiple
+    percentiles. This is useful when you want to select features at different
+    percentiles without having to refit the selector each time.
+
+    Parameters
+    ----------
+    score_func : callable, default=None
+        The function to use to compute the scores for each feature. If None,
+        the default score function is used.
+    percentile : int, default=10
+        The initial percentile to select features from. This is used only for
+        fitting the selector. After fitting, you can use
+        `transform_by_percentile` to transform data for different percentiles.
+
+    Attributes
+    ----------
+    scores_ : array of shape [n_features]
+        The scores of the features after fitting the selector.
+    pvalues_ : array of shape [n_features]
+        p-values of feature scores, None if score_func returned only scores.
+    n_features_in_ : int
+        The number of features seen during fitting.
+    feature_names_in_ : array of shape [n_features_in_]
+        Names of features seen during fitting. Only available if the input
+        data has feature names.
+    """
+
     def _custom_support_mask(self, percentile):
         check_is_fitted(self, "scores_")
 
@@ -59,6 +89,7 @@ class MultiSelectPercentile(SelectPercentile):
                 "No features were selected: either the data is"
                 " too noisy or the selection test too strict.",
                 UserWarning,
+                stacklevel=2,
             )
             return np.empty(0).reshape((X.shape[0], 0))
         if len(mask) != X.shape[1]:

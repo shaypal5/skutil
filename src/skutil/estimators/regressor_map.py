@@ -7,9 +7,7 @@ from sklearn.utils import all_estimators
 
 
 def class_name_to_class_regressor_map() -> Dict[str, object]:
-    """Returns a dict mapping sklearn regressor class names to class
-    objects.
-    """
+    """Return a mapping of sklearn regressor class names to class objects."""
     name2class = {}
     estimators = all_estimators()
     for name, class_ in estimators:

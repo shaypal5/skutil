@@ -13,11 +13,10 @@ from sklearn.utils.multiclass import unique_labels
 
 
 class _BaseColumnIgnoringClassifier(BaseEstimator, ClassifierMixin):
-    """A base class for sklearn classifier wrappers that ignores input
-    columns.
-    """
+    """A base class for sklearn classifier wrappers ignoring input columns."""
 
     def __init__(self, clf):
+        """Initialize the classifier wrapper."""
         self.clf = clf
         if hasattr(self.clf, "decision_function"):
             self.decision_function = self._hidden_decision_function
@@ -129,6 +128,7 @@ class IxColIgnoringClassifier(_BaseColumnIgnoringClassifier):
     """
 
     def __init__(self, clf, col_ignore):
+        """Initialize the classifier wrapper."""
         super(IxColIgnoringClassifier, self).__init__(clf=clf)
         self.col_ignore = col_ignore
 
@@ -149,6 +149,7 @@ class ObjColIgnoringClassifier(_BaseColumnIgnoringClassifier):
     """
 
     def __init__(self, clf):
+        """Initialize the classifier wrapper."""
         super(ObjColIgnoringClassifier, self).__init__(clf=clf)
         self.col_to_drop = None
 
@@ -156,7 +157,7 @@ class ObjColIgnoringClassifier(_BaseColumnIgnoringClassifier):
         if self.col_to_drop is None:
             self.col_to_drop = []
             for colname, dtype in X.dtypes.items():
-                if dtype == object:
+                if dtype is object:
                     self.col_to_drop.append(colname)
                 else:
                     try:
@@ -183,6 +184,7 @@ class PatternColIgnoringClassifier(_BaseColumnIgnoringClassifier):
     """
 
     def __init__(self, clf, pattern, exclude=False):
+        """Initialize the classifier wrapper."""
         super(PatternColIgnoringClassifier, self).__init__(clf=clf)
         self.pattern = pattern
         self.exclude = exclude
