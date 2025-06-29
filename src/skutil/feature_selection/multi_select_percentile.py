@@ -43,6 +43,7 @@ class MultiSelectPercentile(SelectPercentile):
     feature_names_in_ : array of shape [n_features_in_]
         Names of features seen during fitting. Only available if the input
         data has feature names.
+
     """
 
     def _custom_support_mask(self, percentile):
