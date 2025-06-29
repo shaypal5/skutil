@@ -7,8 +7,7 @@ from sklearn.utils import all_estimators
 
 
 def class_name_to_class_regressor_map() -> Dict[str, object]:
-    """Returns a dict mapping sklearn regressor class names to class objects.
-    """
+    """Return a mapping of sklearn regressor class names to class objects."""
     name2class = {}
     estimators = all_estimators()
     for name, class_ in estimators:
@@ -38,6 +37,7 @@ def regressor_cls_by_name(name):
     -------
     >>> regressor_cls_by_name('LinearRegression')
     <class 'sklearn.linear_model._base.LinearRegression'>
+
     """
     global REG_CLS_NAME_2_CLS_MAP
     try:

@@ -8,23 +8,22 @@
 # License: BSD 3 clause
 
 from __future__ import division
+
 import warnings
 from inspect import signature
-
 from math import log
+
 import numpy as np
-
 from scipy.optimize import fmin_bfgs
-from sklearn.preprocessing import LabelEncoder
-
 from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin, clone
-from sklearn.preprocessing import label_binarize, LabelBinarizer
-from sklearn.utils import indexable, column_or_1d
-from sklearn.utils.validation import check_is_fitted, check_consistent_length
+
 # from sklearn.utils.fixes import signature
 from sklearn.isotonic import IsotonicRegression
-from sklearn.svm import LinearSVC
 from sklearn.model_selection import check_cv
+from sklearn.preprocessing import LabelBinarizer, LabelEncoder, label_binarize
+from sklearn.svm import LinearSVC
+from sklearn.utils import column_or_1d, indexable
+from sklearn.utils.validation import check_consistent_length, check_is_fitted
 
 
 class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
@@ -98,14 +97,17 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
 
     .. [4] Predicting Good Probabilities with Supervised Learning,
            A. Niculescu-Mizil & R. Caruana, ICML 2005
+
     """
-    def __init__(self, base_estimator=None, method='sigmoid', cv=3):
+
+    def __init__(self, base_estimator=None, method="sigmoid", cv=3):
+        """Initialize the calibrating classifier."""
         self.base_estimator = base_estimator
         self.method = method
         self.cv = cv
 
     def fit(self, X, y, sample_weight=None):
-        """Fit the calibrated model
+        """Fit the calibrated model.
 
         Parameters
         ----------
@@ -122,6 +124,7 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
         -------
         self : object
             Returns an instance of self.
+
         """
         X, y = indexable(X, y)
         le = LabelBinarizer().fit(y)
@@ -129,14 +132,21 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
 
         # Check that each cross-validation fold can have at least one
         # example per class
-        n_folds = self.cv if isinstance(self.cv, int) \
-            else self.cv.n_folds if hasattr(self.cv, "n_folds") else None
-        if n_folds and \
-                np.any([np.sum(y == class_) < n_folds for class_ in
-                        self.classes_]):
-            raise ValueError("Requesting %d-fold cross-validation but provided"
-                             " less than %d examples for at least one class."
-                             % (n_folds, n_folds))
+        n_folds = (
+            self.cv
+            if isinstance(self.cv, int)
+            else self.cv.n_folds
+            if hasattr(self.cv, "n_folds")
+            else None
+        )
+        if n_folds and np.any(
+            [np.sum(y == class_) < n_folds for class_ in self.classes_]
+        ):
+            raise ValueError(
+                "Requesting %d-fold cross-validation but provided"
+                " less than %d examples for at least one class."
+                % (n_folds, n_folds)
+            )
 
         self.calibrated_classifiers_ = []
         if self.base_estimator is None:
@@ -148,7 +158,8 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
 
         if self.cv == "prefit":
             calibrated_classifier = _CalibratedClassifier(
-                base_estimator, method=self.method)
+                base_estimator, method=self.method
+            )
             if sample_weight is not None:
                 calibrated_classifier.fit(X, y, sample_weight)
             else:
@@ -158,11 +169,16 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
             cv = check_cv(self.cv, y, classifier=True)
             fit_parameters = signature(base_estimator.fit).parameters
             estimator_name = type(base_estimator).__name__
-            if (sample_weight is not None
-                    and "sample_weight" not in fit_parameters):
-                warnings.warn("%s does not support sample_weight. Samples"
-                              " weights are only used for the calibration"
-                              " itself." % estimator_name)
+            if (
+                sample_weight is not None
+                and "sample_weight" not in fit_parameters
+            ):
+                warnings.warn(
+                    "%s does not support sample_weight. Samples"
+                    " weights are only used for the calibration"
+                    " itself." % estimator_name,
+                    stacklevel=2,
+                )
                 base_estimator_sample_weight = None
             else:
                 if sample_weight is not None:
@@ -172,17 +188,20 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
                 this_estimator = clone(base_estimator)
                 if base_estimator_sample_weight is not None:
                     this_estimator.fit(
-                        X[train], y[train],
-                        sample_weight=base_estimator_sample_weight[train])
+                        X[train],
+                        y[train],
+                        sample_weight=base_estimator_sample_weight[train],
+                    )
                 else:
                     this_estimator.fit(X[train], y[train])
 
                 calibrated_classifier = _CalibratedClassifier(
-                    this_estimator, method=self.method,
-                    classes=self.classes_)
+                    this_estimator, method=self.method, classes=self.classes_
+                )
                 if sample_weight is not None:
-                    calibrated_classifier.fit(X[test], y[test],
-                                              sample_weight[test])
+                    calibrated_classifier.fit(
+                        X[test], y[test], sample_weight[test]
+                    )
                 else:
                     calibrated_classifier.fit(X[test], y[test])
                 self.calibrated_classifiers_.append(calibrated_classifier)
@@ -190,7 +209,7 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
         return self
 
     def predict_proba(self, X):
-        """Posterior probabilities of classification
+        """Posterior probabilities of classification.
 
         This function returns posterior probabilities of classification
         according to each class on an array of test vectors X.
@@ -204,6 +223,7 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
         -------
         C : array, shape (n_samples, n_classes)
             The predicted probas.
+
         """
         check_is_fitted(self, ["classes_", "calibrated_classifiers_"])
         # Compute the arithmetic mean of the predictions of the calibrated
@@ -218,8 +238,10 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
         return mean_proba
 
     def predict(self, X):
-        """Predict the target of new samples. Can be different from the
-        prediction of the uncalibrated classifier.
+        """Predict the target of new samples.
+
+        Predictions could be different from the prediction of the uncalibrated
+        classifier.
 
         Parameters
         ----------
@@ -230,6 +252,7 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
         -------
         C : array, shape (n_samples,)
             The predicted class.
+
         """
         check_is_fitted(self, ["classes_", "calibrated_classifiers_"])
         return self.classes_[np.argmax(self.predict_proba(X), axis=1)]
@@ -273,8 +296,10 @@ class _CalibratedClassifier(object):
 
     .. [4] Predicting Good Probabilities with Supervised Learning,
            A. Niculescu-Mizil & R. Caruana, ICML 2005
+
     """
-    def __init__(self, base_estimator, method='sigmoid', classes=None):
+
+    def __init__(self, base_estimator, method="sigmoid", classes=None):
         self.base_estimator = base_estimator
         self.method = method
         self.classes = classes
@@ -290,16 +315,18 @@ class _CalibratedClassifier(object):
             if n_classes == 2:
                 df = df[:, 1:]
         else:
-            raise RuntimeError('classifier has no decision_function or '
-                               'predict_proba method.')
+            raise RuntimeError(
+                "classifier has no decision_function or predict_proba method."
+            )
 
-        idx_pos_class = self.label_encoder_.\
-            transform(self.base_estimator.classes_)
+        idx_pos_class = self.label_encoder_.transform(
+            self.base_estimator.classes_
+        )
 
         return df, idx_pos_class
 
     def fit(self, X, y, sample_weight=None):
-        """Calibrate the fitted model
+        """Calibrate the fitted model.
 
         Parameters
         ----------
@@ -316,8 +343,8 @@ class _CalibratedClassifier(object):
         -------
         self : object
             Returns an instance of self.
-        """
 
+        """
         self.label_encoder_ = LabelEncoder()
         if self.classes is None:
             self.label_encoder_.fit(y)
@@ -331,20 +358,22 @@ class _CalibratedClassifier(object):
         self.calibrators_ = []
 
         for k, this_df in zip(idx_pos_class, df.T):
-            if self.method == 'isotonic':
-                calibrator = IsotonicRegression(out_of_bounds='clip')
-            elif self.method == 'sigmoid':
+            if self.method == "isotonic":
+                calibrator = IsotonicRegression(out_of_bounds="clip")
+            elif self.method == "sigmoid":
                 calibrator = _SigmoidCalibration()
             else:
-                raise ValueError('method should be "sigmoid" or '
-                                 '"isotonic". Got %s.' % self.method)
+                raise ValueError(
+                    'method should be "sigmoid" or '
+                    '"isotonic". Got %s.' % self.method
+                )
             calibrator.fit(this_df, Y[:, k], sample_weight)
             self.calibrators_.append(calibrator)
 
         return self
 
     def predict_proba(self, X):
-        """Posterior probabilities of classification
+        """Posterior probabilities of classification.
 
         This function returns posterior probabilities of classification
         according to each class on an array of test vectors X.
@@ -358,35 +387,37 @@ class _CalibratedClassifier(object):
         -------
         C : array, shape (n_samples, n_classes)
             The predicted probas. Can be exact zeros.
+
         """
         n_classes = len(self.classes_)
         proba = np.zeros((X.shape[0], n_classes))
 
         df, idx_pos_class = self._preproc(X)
 
-        for k, this_df, calibrator in \
-                zip(idx_pos_class, df.T, self.calibrators_):
+        for k, this_df, calibrator in zip(
+            idx_pos_class, df.T, self.calibrators_
+        ):
             if n_classes == 2:
                 k += 1
             proba[:, k] = calibrator.predict(this_df)
 
         # Normalize the probabilities
         if n_classes == 2:
-            proba[:, 0] = 1. - proba[:, 1]
+            proba[:, 0] = 1.0 - proba[:, 1]
         else:
             proba /= np.sum(proba, axis=1)[:, np.newaxis]
 
         # XXX : for some reason all probas can be 0
-        proba[np.isnan(proba)] = 1. / n_classes
+        proba[np.isnan(proba)] = 1.0 / n_classes
 
         # Deal with cases where the predicted probability minimally exceeds 1.0
-        proba[(1.0 < proba) & (proba <= 1.0 + 1e-5)] = 1.0
+        proba[(proba > 1.0) & (proba <= 1.0 + 1e-5)] = 1.0
 
         return proba
 
 
 def _sigmoid_calibration(df, y, sample_weight=None):
-    """Probability Calibration with sigmoid method (Platt 2000)
+    """Probability Calibration with sigmoid method (Platt 2000).
 
     Parameters
     ----------
@@ -410,6 +441,7 @@ def _sigmoid_calibration(df, y, sample_weight=None):
     References
     ----------
     Platt, "Probabilistic Outputs for Support Vector Machines"
+
     """
     df = column_or_1d(df)
     y = column_or_1d(y)
@@ -421,15 +453,15 @@ def _sigmoid_calibration(df, y, sample_weight=None):
     prior0 = float(np.sum(y <= 0))
     prior1 = y.shape[0] - prior0
     T = np.zeros(y.shape)
-    T[y > 0] = (prior1 + 1.) / (prior1 + 2.)
-    T[y <= 0] = 1. / (prior0 + 2.)
-    T1 = 1. - T
+    T[y > 0] = (prior1 + 1.0) / (prior1 + 2.0)
+    T[y <= 0] = 1.0 / (prior0 + 2.0)
+    T1 = 1.0 - T
 
     def objective(AB):
         # From Platt (beginning of Section 2.2)
         E = np.exp(AB[0] * F + AB[1])
-        P = 1. / (1. + E)
-        l = -(T * np.log(P + tiny) + T1 * np.log(1. - P + tiny))  # noqa
+        P = 1.0 / (1.0 + E)
+        l = -(T * np.log(P + tiny) + T1 * np.log(1.0 - P + tiny))  # noqa
         if sample_weight is not None:
             return (sample_weight * l).sum()
         else:
@@ -438,7 +470,7 @@ def _sigmoid_calibration(df, y, sample_weight=None):
     def grad(AB):
         # gradient of the objective function
         E = np.exp(AB[0] * F + AB[1])
-        P = 1. / (1. + E)
+        P = 1.0 / (1.0 + E)
         TEP_minus_T1P = P * (T * E - T1)
         if sample_weight is not None:
             TEP_minus_T1P *= sample_weight
@@ -446,7 +478,7 @@ def _sigmoid_calibration(df, y, sample_weight=None):
         dB = np.sum(TEP_minus_T1P)
         return np.array([dA, dB])
 
-    AB0 = np.array([0., log((prior0 + 1.) / (prior1 + 1.))])
+    AB0 = np.array([0.0, log((prior0 + 1.0) / (prior1 + 1.0))])
     AB_ = fmin_bfgs(objective, AB0, fprime=grad, disp=False)
     return AB_[0], AB_[1]
 
@@ -461,7 +493,9 @@ class _SigmoidCalibration(BaseEstimator, RegressorMixin):
 
     b_ : float
         The intercept.
+
     """
+
     def fit(self, X, y, sample_weight=None):
         """Fit the model using X, y as training data.
 
@@ -480,6 +514,7 @@ class _SigmoidCalibration(BaseEstimator, RegressorMixin):
         -------
         self : object
             Returns an instance of self.
+
         """
         X = column_or_1d(X)
         y = column_or_1d(y)
@@ -500,20 +535,23 @@ class _SigmoidCalibration(BaseEstimator, RegressorMixin):
         -------
         T_ : array, shape (n_samples,)
             The predicted data.
+
         """
         T = column_or_1d(T)
-        return 1. / (1. + np.exp(self.a_ * T + self.b_))
+        return 1.0 / (1.0 + np.exp(self.a_ * T + self.b_))
 
 
 def _check_binary_probabilistic_predictions(y_true, y_prob):
-    """Check that y_true is binary and y_prob contains valid probabilities"""
+    """Check that y_true is binary and y_prob contains valid probabilities."""
     check_consistent_length(y_true, y_prob)
 
     labels = np.unique(y_true)
 
     if len(labels) > 2:
-        raise ValueError("Only binary classification is supported. "
-                         "Provided labels %s." % labels)
+        raise ValueError(
+            "Only binary classification is supported. "
+            "Provided labels %s." % labels
+        )
 
     if y_prob.max() > 1:
         raise ValueError("y_prob contains values greater than 1.")
@@ -561,6 +599,7 @@ def calibration_curve(y_true, y_prob, normalize=False, n_bins=5):
     Probabilities With Supervised Learning, in Proceedings of the 22nd
     International Conference on Machine Learning (ICML).
     See section 4 (Qualitative Analysis of Predictions).
+
     """
     y_true = column_or_1d(y_true)
     y_prob = column_or_1d(y_prob)
@@ -568,12 +607,13 @@ def calibration_curve(y_true, y_prob, normalize=False, n_bins=5):
     if normalize:  # Normalize predicted values into interval [0, 1]
         y_prob = (y_prob - y_prob.min()) / (y_prob.max() - y_prob.min())
     elif y_prob.min() < 0 or y_prob.max() > 1:
-        raise ValueError("y_prob has values outside [0, 1] and normalize is "
-                         "set to False.")
+        raise ValueError(
+            "y_prob has values outside [0, 1] and normalize is set to False."
+        )
 
     y_true = _check_binary_probabilistic_predictions(y_true, y_prob)
 
-    bins = np.linspace(0., 1. + 1e-8, n_bins + 1)
+    bins = np.linspace(0.0, 1.0 + 1e-8, n_bins + 1)
     binids = np.digitize(y_prob, bins) - 1
 
     bin_sums = np.bincount(binids, weights=y_prob, minlength=len(bins))
@@ -581,7 +621,7 @@ def calibration_curve(y_true, y_prob, normalize=False, n_bins=5):
     bin_total = np.bincount(binids, minlength=len(bins))
 
     nonzero = bin_total != 0
-    prob_true = (bin_true[nonzero] / bin_total[nonzero])
-    prob_pred = (bin_sums[nonzero] / bin_total[nonzero])
+    prob_true = bin_true[nonzero] / bin_total[nonzero]
+    prob_pred = bin_sums[nonzero] / bin_total[nonzero]
 
     return prob_true, prob_pred

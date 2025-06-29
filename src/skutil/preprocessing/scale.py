@@ -1,7 +1,7 @@
 """Scaler-related stuff."""
 
-import inspect
 import functools
+import inspect
 from importlib import import_module
 
 from decore import lazy_property
@@ -9,7 +9,7 @@ from decore import lazy_property
 
 @lazy_property
 def _preprocessing():
-    return import_module('sklearn.preprocessing')
+    return import_module("sklearn.preprocessing")
 
 
 @functools.lru_cache(maxsize=128)
@@ -32,6 +32,7 @@ def scaler_cls_by_name(cls_name):
     <class 'sklearn.preprocessing._data.RobustScaler'>
     >>> scaler_cls_by_name('Normalizer')
     <class 'sklearn.preprocessing._data.Normalizer'>
+
     """
     submodule = _preprocessing()
     return getattr(submodule, cls_name)
@@ -45,15 +46,15 @@ def _constructor_kwargs_by_class(klass):
 
 # flake8: noqa: E501
 def scaler_by_params(name, **kwargs):
-    """Returns an sklearn scaler object by the given name and parameters.
+    """Get an sklearn scaler object by the given name and parameters.
 
     Parameters
     ----------
     name : str
         The name of the sklearn scaler class.
     **kwargs : Extra keyword arguments
-        All keyword arguments supported by the consturctor of the class are
-        forwared to it, while the rest are discarded.
+        All keyword arguments supported by the constructor of the class are
+        forward to it, while the rest are discarded.
 
     Returns
     -------
@@ -66,11 +67,13 @@ def scaler_by_params(name, **kwargs):
     QuantileTransformer(copy=True, ignore_implicit_zeros=False, n_quantiles=500,
               output_distribution='uniform', random_state=None,
               subsample=100000)
+
     """
     klass = scaler_cls_by_name(name)
     allowed_kwargs = _constructor_kwargs_by_class(klass)
     constructor_kwargs = {
-        key: kwargs[key] for key in kwargs
-        if key in allowed_kwargs and key != 'self'
+        key: kwargs[key]
+        for key in kwargs
+        if key in allowed_kwargs and key != "self"
     }
     return klass(**constructor_kwargs)

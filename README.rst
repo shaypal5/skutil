@@ -7,7 +7,7 @@ Utilities for scikit-learn.
 .. code-block:: python
 
   from skutil.estimators import ColumnIgnoringClassifier
-  # use a classifier that can't handle string data as 
+  # use a classifier that can't handle string data as
   # an inner classifier in some stacked model, for example
 
 .. contents::
@@ -31,7 +31,7 @@ Basic Use
 estimators
 ----------
 
-``ColumnIgnoringClassifier`` - An sklearn classifier wrapper that ignores input columns by index. 
+``ColumnIgnoringClassifier`` - An sklearn classifier wrapper that ignores input columns by index.
 
 ``ObjColIgnoringClassifier`` - An sklearn classifier wrapper that ignores object columns in dataframes.
 
