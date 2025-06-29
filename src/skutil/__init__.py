@@ -1,7 +1,6 @@
 """Utilities for scikit-learn."""
-# fmt: off
 
 from . import estimators as estimators
-from ._version import *  # noqa: F403
+from ._version import __version__
 
-# fmt: on
+__all__ = ['estimators', '__version__']
