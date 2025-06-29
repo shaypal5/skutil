@@ -134,14 +134,17 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
         n_folds = (
             self.cv
             if isinstance(self.cv, int)
-            else self.cv.n_folds if hasattr(self.cv, "n_folds") else None
+            else self.cv.n_folds
+            if hasattr(self.cv, "n_folds")
+            else None
         )
         if n_folds and np.any(
             [np.sum(y == class_) < n_folds for class_ in self.classes_]
         ):
             raise ValueError(
                 "Requesting %d-fold cross-validation but provided"
-                " less than %d examples for at least one class." % (n_folds, n_folds)
+                " less than %d examples for at least one class."
+                % (n_folds, n_folds)
             )
 
         self.calibrated_classifiers_ = []
@@ -165,7 +168,10 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
             cv = check_cv(self.cv, y, classifier=True)
             fit_parameters = signature(base_estimator.fit).parameters
             estimator_name = type(base_estimator).__name__
-            if sample_weight is not None and "sample_weight" not in fit_parameters:
+            if (
+                sample_weight is not None
+                and "sample_weight" not in fit_parameters
+            ):
                 warnings.warn(
                     "%s does not support sample_weight. Samples"
                     " weights are only used for the calibration"
@@ -191,7 +197,9 @@ class UnsafeCalibratedClassifierCV(BaseEstimator, ClassifierMixin):
                     this_estimator, method=self.method, classes=self.classes_
                 )
                 if sample_weight is not None:
-                    calibrated_classifier.fit(X[test], y[test], sample_weight[test])
+                    calibrated_classifier.fit(
+                        X[test], y[test], sample_weight[test]
+                    )
                 else:
                     calibrated_classifier.fit(X[test], y[test])
                 self.calibrated_classifiers_.append(calibrated_classifier)
@@ -307,7 +315,9 @@ class _CalibratedClassifier(object):
                 "classifier has no decision_function or predict_proba method."
             )
 
-        idx_pos_class = self.label_encoder_.transform(self.base_estimator.classes_)
+        idx_pos_class = self.label_encoder_.transform(
+            self.base_estimator.classes_
+        )
 
         return df, idx_pos_class
 
@@ -350,7 +360,8 @@ class _CalibratedClassifier(object):
                 calibrator = _SigmoidCalibration()
             else:
                 raise ValueError(
-                    'method should be "sigmoid" or ' '"isotonic". Got %s.' % self.method
+                    'method should be "sigmoid" or '
+                    '"isotonic". Got %s.' % self.method
                 )
             calibrator.fit(this_df, Y[:, k], sample_weight)
             self.calibrators_.append(calibrator)
@@ -379,7 +390,9 @@ class _CalibratedClassifier(object):
 
         df, idx_pos_class = self._preproc(X)
 
-        for k, this_df, calibrator in zip(idx_pos_class, df.T, self.calibrators_):
+        for k, this_df, calibrator in zip(
+            idx_pos_class, df.T, self.calibrators_
+        ):
             if n_classes == 2:
                 k += 1
             proba[:, k] = calibrator.predict(this_df)
@@ -532,7 +545,8 @@ def _check_binary_probabilistic_predictions(y_true, y_prob):
 
     if len(labels) > 2:
         raise ValueError(
-            "Only binary classification is supported. " "Provided labels %s." % labels
+            "Only binary classification is supported. "
+            "Provided labels %s." % labels
         )
 
     if y_prob.max() > 1:
