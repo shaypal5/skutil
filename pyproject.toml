@@ -19,7 +19,7 @@ keywords = [
 ]
 license = { file = "LICENSE" }
 authors = [
-  { name = "Shay Palachy Affek", email = 'shay.palachy@gmail.com' },
+  { name = "Shay Palachy Affek", email = "shay.palachy@gmail.com" },
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -27,11 +27,11 @@ classifiers = [
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Other/Nonlisted Topic",
   "Topic :: Software Development :: Libraries",
   "Topic :: Software Development :: Libraries :: Python Modules",
@@ -47,19 +47,15 @@ dependencies = [
 urls.Source = "https://github.com/shaypal5/skutil"
 
 [tool.setuptools]
-include-package-data = true
-
-[tool.setuptools.dynamic]
-version = { attr = "skutil._version.__version__" }
-
-[tool.setuptools.packages.find]
-where = [
+packages.find.where = [
   "src",
-] # list of folders that contain the packages (["."] by default)
-include = [
+]  # list of folders that contain the packages (["."] by default)
+packages.find.include = [
   "skutil*",
-] # package names should match these glob patterns (["*"] by default)
-namespaces = false # to disable scanning PEP 420 namespaces (true by default)
+]  # package names should match these glob patterns (["*"] by default)
+packages.find.namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
+include-package-data = true
+dynamic.version = { attr = "skutil._version.__version__" }
 
 [tool.black]
 line-length = 79
@@ -82,12 +78,12 @@ lint.select = [
   "D",      # see: https://pypi.org/project/pydocstyle
   "E",
   "F",      # see: https://pypi.org/project/pyflakes
-  "I",      #see: https://pypi.org/project/isort/
+  "I",      # see: https://pypi.org/project/isort/
   "RUF100", # alternative to yesqa
-  #"N", # see: https://pypi.org/project/pep8-naming
-  "S",   # see: https://pypi.org/project/flake8-bandit
+  # "N", # see: https://pypi.org/project/pep8-naming
+  "S",      # see: https://pypi.org/project/flake8-bandit
   "SIM",
-  "W",   # see: https://pypi.org/project/pycodestyle
+  "W",      # see: https://pypi.org/project/pycodestyle
 ]
 lint.extend-select = [
   "A",  # see: https://pypi.org/project/flake8-builtins
@@ -116,12 +112,11 @@ lint.per-file-ignores."tests/**" = [
 lint.unfixable = [
   "F401",
 ]
-
-#[tool.ruff.pydocstyle]
+# [tool.ruff.pydocstyle]
 ## Use Google-style docstrings.
-#convention = "google"
-#[tool.ruff.pycodestyle]
-#ignore-overlong-task-comments = true
+# convention = "google"
+# [tool.ruff.pycodestyle]
+# ignore-overlong-task-comments = true
 # Unlike Flake8, default to a complexity level of 10.
 lint.mccabe.max-complexity = 10
 
@@ -132,16 +127,16 @@ wrap-summaries = 79
 wrap-descriptions = 79
 blank = true
 
-[tool.pytest.ini_options]
-testpaths = [
+[tool.pytest]
+ini_options.testpaths = [
   "src/skutil",
   "tests",
 ]
-norecursedirs = [
-  "dist",
+ini_options.norecursedirs = [
   "build",
+  "dist",
 ]
-addopts = [
+ini_options.addopts = [
   "--cov=skutil",
   "--color=yes",
   "-r a",
@@ -150,20 +145,19 @@ addopts = [
   "-W error",
 ]
 
-[tool.coverage.run]
-branch = true
-# dynamic_context = "test_function"
-omit = [
-  "tests/*",
-  "skutil/_version.py",
-  "skutil/__init__.py",
+[tool.coverage]
+run.branch = true
+# run.dynamic_context = "test_function"
+run.omit = [
   "**/scripts/**",
+  "skutil/__init__.py",
+  "skutil/_version.py",
+  "tests/*",
 ]
-[tool.coverage.report]
-show_missing = true
 # Regexes for lines to exclude from consideration
-exclude_lines = [
+report.exclude_lines = [
+  "if TYPE_CHECKING:",         # Is only true when running mypy, not tests
   "pragma: no cover",          # Have to re-enable the standard pragma
   "raise NotImplementedError", # Don't complain if tests don't hit defensive assertion code:
-  "if TYPE_CHECKING:",         # Is only true when running mypy, not tests
 ]
+report.show_missing = true
