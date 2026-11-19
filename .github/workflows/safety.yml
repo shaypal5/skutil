@@ -21,7 +21,8 @@ jobs:
         run: |
           pip install uv
           uv pip compile pyproject.toml -o requirements.txt
-      - name: Security vulnerabilities scan
-        uses: aufdenpunkt/python-safety-check@v1.0.6
+      - name: Audit dependency vulnerabilities
+        uses: pypa/gh-action-pip-audit@v1.1.0
         with:
-          scan_requirements_file_only: "true"
+          inputs: requirements.txt
+          no-deps: true
