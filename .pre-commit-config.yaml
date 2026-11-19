@@ -73,7 +73,7 @@ repos:
         files: "src/*"
 
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: v2.5.1
+    rev: v2.7.0
     hooks:
       - id: pyproject-fmt
         additional_dependencies: [tox]
