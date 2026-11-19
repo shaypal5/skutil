@@ -49,7 +49,6 @@ jobs:
           fail_ci_if_error: true
           name: codecov-umbrella
           token: ${{ secrets.CODECOV_TOKEN }} # required
-          flags: ${{ matrix.backend }}
 
   testing-guardian:
     runs-on: ubuntu-latest
